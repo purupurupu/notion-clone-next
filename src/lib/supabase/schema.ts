@@ -8,7 +8,7 @@ export const workspace = pgTable("workspace", {
   }),
   workspaceOwner: uuid("workspace_owner").notNull(),
   title: text("title").notNull(),
-  inconId: text("icon_id").notNull(),
+  iconId: text("icon_id").notNull(),
   data: text("data"),
   inTrash: text("in_trash"),
   logo: text("logo"),
