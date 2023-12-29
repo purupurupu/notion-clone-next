@@ -81,13 +81,7 @@ function HomaPage() {
               {CLIENTS.map((client) => (
                 <div
                   key={client.alt}
-                  className="relative
-                w-[200ox]
-                m-20
-                shrink-0
-                flex
-                items-center
-                "
+                  className="relative w-[200ox] m-20 shrink-0 items-center flex"
                 >
                   <Image
                     src={client.logo}
@@ -100,6 +94,14 @@ function HomaPage() {
             </div>
           ))}
         </div>
+      </section>
+      <section className="relative flex flex-col items-center justify-center px-4 sm:px-6">
+        <div className="w-[30%] blur-[120px] rounded-full h-32 absolute bg-brand-primaryPurple/50" />
+        <TitleSection
+          title="Keep track of your meetings all in one place"
+          subheading="Capture your ideas, thoughts, and meeting notes in a structured and organized manner."
+          pill="Features"
+        />
       </section>
     </>
   );
