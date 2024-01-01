@@ -3,6 +3,7 @@ import TitleSection from "@/components/landing-page/title-section";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Banner from "../../../public/appBanner.png";
+import Cal from "../../../public/cal.png";
 import { CLIENTS } from "@/lib/constants";
 
 function HomaPage() {
@@ -102,6 +103,9 @@ function HomaPage() {
           subheading="Capture your ideas, thoughts, and meeting notes in a structured and organized manner."
           pill="Features"
         />
+        <div className="mt-10 max-w-[450px] flex justify-center items-center relative sm:ml-0 rounded-2xl border-8 border-washed-purple-300 border-opacity-10">
+          <Image src={Cal} alt="Banner" className="rounded-2xl" />
+        </div>
       </section>
     </>
   );
