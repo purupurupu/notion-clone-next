@@ -5,18 +5,14 @@ import Image from "next/image";
 import Banner from "../../../public/appBanner.png";
 import Cal from "../../../public/cal.png";
 import Diamond from "../../../public/icons/diamond.svg";
+import CheckIcon from "../../../public/icons/check.svg";
 import { CLIENTS, USERS, PRICING_CARDS, PRICING_PLANS } from "@/lib/constants";
 import { randomUUID } from "crypto";
 import { twMerge } from "tailwind-merge";
 import clsx from "clsx";
 import CustomCard from "@/components/landing-page/custom-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "@/components/ui/card";
+import { CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 
 function HomaPage() {
   return (
@@ -201,6 +197,40 @@ function HomaPage() {
                   )}
                   {card.planType}
                 </CardTitle>
+              }
+              cardContent={
+                <CardContent className="p-0">
+                  <span className="text-2xl font-normal">${card.price}</span>
+                  {+card.price > 0 ? (
+                    <span className="ml-1 dark:text-washed-purple-800">
+                      /mo
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                  <p className="dark:text-washed-purple-800">
+                    {card.description}
+                  </p>
+                  <Button
+                    variant="default"
+                    className="w-full mt-4 whitespace-nowrap"
+                  >
+                    {card.planType === PRICING_PLANS.proplan
+                      ? "Go Pro"
+                      : "Get Started"}
+                  </Button>
+                </CardContent>
+              }
+              cardFooter={
+                <ul className="flex flex-col gap-4 mb-2 font-normal ">
+                  <small>{card.highlightFeature}</small>
+                  {card.features.map((feature) => (
+                    <li key={feature} className="flex items-center gap-2 ">
+                      <Image src={CheckIcon} alt="Check Icon" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
               }
             ></CustomCard>
           ))}
