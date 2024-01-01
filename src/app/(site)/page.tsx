@@ -4,13 +4,19 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Banner from "../../../public/appBanner.png";
 import Cal from "../../../public/cal.png";
-import { CLIENTS, USERS } from "@/lib/constants";
+import Diamond from "../../../public/icons/diamond.svg";
+import { CLIENTS, USERS, PRICING_CARDS, PRICING_PLANS } from "@/lib/constants";
 import { randomUUID } from "crypto";
 import { twMerge } from "tailwind-merge";
 import clsx from "clsx";
 import CustomCard from "@/components/landing-page/custom-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
 
 function HomaPage() {
   return (
@@ -161,6 +167,42 @@ function HomaPage() {
                 ></CustomCard>
               ))}
             </div>
+          ))}
+        </div>
+      </section>
+      <section className="px-4 mt-20 sm:px-6">
+        <TitleSection
+          title="The Perfect Plan For You"
+          subheading="Experience all the benefits of our platform. Select a plan that suits your needs and take your productivity to new heights."
+          pill="Pricing"
+        />
+        <div className="flex flex-col-reverse items-center justify-center gap-4 mt-10 sm:flex-row sm:items-stretch">
+          {PRICING_CARDS.map((card) => (
+            <CustomCard
+              key={card.planType}
+              className={clsx(
+                "w-[300px] rounded-2xl dark:bg-black/40 background-blur-3xl relative",
+                {
+                  "border-brand-primaryPurple/70":
+                    card.planType === PRICING_PLANS.proplan,
+                }
+              )}
+              cardHeader={
+                <CardTitle className="text-2xl font-semibold">
+                  {card.planType === PRICING_PLANS.proplan && (
+                    <>
+                      <div className="hidden dark:block w-full blur-[120px] rounded-full h-32 absolute bg-brand-primaryPurple/80 -z-10 top-0"></div>
+                      <Image
+                        src={Diamond}
+                        alt="Pro Plan Icon"
+                        className="absolute top-6 right-6"
+                      />
+                    </>
+                  )}
+                  {card.planType}
+                </CardTitle>
+              }
+            ></CustomCard>
           ))}
         </div>
       </section>
