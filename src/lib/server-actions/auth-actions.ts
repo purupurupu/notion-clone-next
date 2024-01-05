@@ -13,3 +13,21 @@ export async function actionLoginUser({
   const response = await supabase.auth.signInWithPassword({ email, password });
   return response;
 }
+
+export async function actionSignUpUser({
+  email,
+  password,
+}: z.infer<typeof FormSchema>) {
+  const supabase = createRouteHandlerClient({ cookies });
+  const { data } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("email", email);
+
+  if (data?.length) return { error: { message: "Email already exists" } };
+  const response = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: "http://localhost:3000/api/auth/callback" },
+  });
+}
