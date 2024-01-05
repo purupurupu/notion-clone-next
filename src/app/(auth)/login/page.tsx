@@ -102,7 +102,9 @@ const LoginPage = () => {
         </Button>
         <span className="self-container">
           Dont have an account?{""}
-          <Link href="/signup" className="text-primary"></Link>
+          <Link href="/signup" className="pl-2 text-primary">
+            Sign Up
+          </Link>
         </span>
       </form>
     </Form>
