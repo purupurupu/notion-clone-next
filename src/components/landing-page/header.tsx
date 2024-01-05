@@ -173,7 +173,7 @@ const Header = () => {
           </Button>
         </Link>{" "}
         <Link href={"/signup"}>
-          <Button variant="btn-secondary" className="whitespace-nowrap">
+          <Button variant="btn-primary" className="whitespace-nowrap">
             Sign Up
           </Button>
         </Link>
