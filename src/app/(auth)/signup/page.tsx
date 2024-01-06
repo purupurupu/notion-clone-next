@@ -21,7 +21,10 @@ import Image from "next/image";
 import Loading from "@/components/global/Loader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { actionLoginUser } from "@/lib/server-actions/auth-actions";
+import {
+  actionLoginUser,
+  actionSignUpUser,
+} from "@/lib/server-actions/auth-actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { MailCheck } from "lucide-react";
 
@@ -72,7 +75,15 @@ const Signup = () => {
   const onSubmit = async ({
     email,
     password,
-  }: z.infer<typeof SignUpFormSchema>) => {};
+  }: z.infer<typeof SignUpFormSchema>) => {
+    const { error } = await actionSignUpUser({ email, password });
+    if (error) {
+      setSubmitError(error.message);
+      form.reset();
+    }
+    setConfirmation(true);
+  };
+
   const signUpHandler = async ({
     email,
     password,
