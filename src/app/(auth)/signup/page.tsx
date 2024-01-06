@@ -106,6 +106,7 @@ const Signup = () => {
               <FormControl>
                 <Input type="email" placeholder="email" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
