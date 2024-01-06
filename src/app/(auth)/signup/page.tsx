@@ -80,6 +80,7 @@ const Signup = () => {
     if (error) {
       setSubmitError(error.message);
       form.reset();
+      return;
     }
     setConfirmation(true);
   };

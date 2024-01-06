@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const requestUrl = new URL(req.nextUrl);
+  const requestUrl = new URL(req.url);
   const code = requestUrl.searchParams.get("code");
 
   if (code) {
