@@ -18,7 +18,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  console.log(db);
+  // uncomment to test supabase
+  // console.log(db);
   return (
     <html lang="en">
       <body className={twMerge("bg-background", inter.className)}>
