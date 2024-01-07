@@ -1,4 +1,6 @@
+import DashboardSetup from "@/components/dashboard-setup/dashboard-setup";
 import db from "@/lib/supabase/db";
+import { getUserSubscriptionStatus } from "@/lib/supabase/queries";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -17,10 +19,18 @@ const DashboardPage = async () => {
     where: (workspace, { eq }) => eq(workspace.workspaceOwner, user.id),
   });
 
+  const { data: subscription, error: subscriptionError } =
+    await getUserSubscriptionStatus(user.id);
+
+  if (subscriptionError) return;
+
   if (!workspace)
     return (
       <div className="flex items-center justify-center w-screen h-screen bg-background">
-        {/* <DashboardSetup>Workspace not found</DashboardSetup> */}
+        <DashboardSetup
+          user={user}
+          subscription={subscription}
+        ></DashboardSetup>
       </div>
     );
 
