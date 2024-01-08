@@ -23,6 +23,6 @@ const migrateDb = async () => {
 };
 
 // Uncomment this line to run migrations
-migrateDb();
+// migrateDb();
 
 export default db;
