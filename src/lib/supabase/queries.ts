@@ -5,6 +5,7 @@ import db from "./db";
 import { File, Folder, Subscription, User, workspace } from "./supabase.types";
 import { and, eq, ilike, notExists } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { collaborators } from "./schema";
 
 export const createWorkspace = async (workspace: workspace) => {
   try {
@@ -52,6 +53,23 @@ export const getFolders = async (workspaceId: string) => {
   } catch (error) {
     return { data: null, error: "Error" };
   }
+};
+
+export const getPrivateWorkspaces = async (userId: string) => {
+  if (!userId) return [];
+  const getPrivateWorkspaces = await db
+    .select({
+      id: workspaces.id,
+      createdAt: workspaces.createdAt,
+      workspaceOwner: workspaces.workspaceOwner,
+      title: workspaces.title,
+      iconId: workspaces.iconId,
+      data: workspaces.data,
+      inTrash: workspaces.inTrash,
+      logo: workspaces.logo,
+    })
+    .from(workspaces)
+    .where(and(notExists(db.select().from(collaborators))));
 };
 
 export const getWorkspaceDetails = async (workspaceId: string) => {
