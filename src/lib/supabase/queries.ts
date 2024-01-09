@@ -1,11 +1,17 @@
 "use server";
 import { validate } from "uuid";
-import { files, folders, users, workspaces } from "../../../migrations/schema";
+import {
+  files,
+  folders,
+  users,
+  workspaces,
+  collaborators,
+} from "../../../migrations/schema";
 import db from "./db";
 import { File, Folder, Subscription, User, workspace } from "./supabase.types";
 import { and, eq, ilike, notExists } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { collaborators } from "./schema";
+// import { collaborators } from "./schema";
 
 export const createWorkspace = async (workspace: workspace) => {
   try {
@@ -122,6 +128,17 @@ export const getSharedWorkspaces = async (userId: string) => {
     .innerJoin(collaborators, eq(workspaces.id, collaborators.workspaceId))
     .where(eq(workspaces.workspaceOwner, userId))) as workspace[];
   return sharedWorkspaces;
+};
+
+export const addCollaborators = async (users: User[], workspaceId: string) => {
+  const response = users.forEach(async (user: User) => {
+    const userExists = await db.query.collaborators.findFirst({
+      where: (u, { eq }) =>
+        and(eq(u.userId, user.id), eq(u.workspaceId, workspaceId)),
+    });
+    if (!userExists)
+      await db.insert(collaborators).values({ workspaceId, userId: user.id });
+  });
 };
 
 export const getWorkspaceDetails = async (workspaceId: string) => {
