@@ -17,6 +17,7 @@ import { Lock, Share } from "lucide-react";
 import { Button } from "../ui/button";
 import { v4 } from "uuid";
 import { addCollaborators, createWorkspace } from "@/lib/supabase/queries";
+import CollaboratorSearch from "./collaborator-search";
 
 const WorkspaceCreator = () => {
   const { user } = useSupabaseUser();
@@ -116,7 +117,11 @@ const WorkspaceCreator = () => {
           </SelectContent>
         </Select>
       </div>
-      {permissions === "shared" && <div></div>}
+      {permissions === "shared" && (
+        <div>
+          <CollaboratorSearch></CollaboratorSearch>
+        </div>
+      )}
       <div>
         <Button
           type="button"
