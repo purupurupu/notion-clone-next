@@ -65,8 +65,8 @@ const CollaboratorSearch: React.FC<CollaboratorSearchProps> = ({
           <Search />
           <Input
             name="name"
-            className="h-2 dark:bg-background"
-            placeholder="email"
+            className="dark:bg-background"
+            placeholder="Email"
             onChange={onChangeHandler}
           />
         </div>
