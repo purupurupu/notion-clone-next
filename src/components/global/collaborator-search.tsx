@@ -1,6 +1,7 @@
+"use client";
 import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
 import { User } from "@/lib/supabase/supabase.types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -14,6 +15,7 @@ import { Search } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import { getUsersFromSearch } from "@/lib/supabase/queries";
 interface CollaboratorSearchProps {
   existingCollaborators: User[] | [];
   getCollaborator: (collaborator: User) => void;
@@ -26,17 +28,26 @@ const CollaboratorSearch: React.FC<CollaboratorSearchProps> = ({
   getCollaborator,
 }) => {
   const { user } = useSupabaseUser();
-  const [searchResult, setSearchResult] = useState<User[] | []>([]);
-  const timeRef = React.useRef<ReturnType<typeof setTimeout>>(null);
+  const [searchResults, setSearchResults] = useState<User[] | []>([]);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     return () => {
-      if (timeRef.current) clearTimeout(timeRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
 
-  const onChangeHandler = () => {};
-  const addCollaborator = () => {};
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (timerRef) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(async () => {
+      const res = await getUsersFromSearch(e.target.value);
+      setSearchResults(res);
+    }, 450);
+  };
+
+  const addCollaborator = (user: User) => {
+    getCollaborator(user);
+  };
 
   return (
     <Sheet>
@@ -60,7 +71,7 @@ const CollaboratorSearch: React.FC<CollaboratorSearchProps> = ({
           />
         </div>
         <ScrollArea className="w-full mt-6 overflow-y-scroll rounded-md">
-          {searchResult
+          {searchResults
             .filter(
               (result) =>
                 !existingCollaborators.some(
@@ -82,7 +93,12 @@ const CollaboratorSearch: React.FC<CollaboratorSearchProps> = ({
                     {user.email}
                   </div>
                 </div>
-                <Button variant="secondary"></Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => addCollaborator(user)}
+                >
+                  Add
+                </Button>
               </div>
             ))}
         </ScrollArea>
