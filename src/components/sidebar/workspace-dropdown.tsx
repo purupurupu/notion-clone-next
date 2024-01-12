@@ -4,7 +4,7 @@ import { useAppState } from "@/lib/providers/state-provider";
 import { workspace } from "@/lib/supabase/supabase.types";
 import React, { useEffect, useState } from "react";
 import SelectedWorkspace from "./selected-workspace";
-import CustomDialogTrigger from "../global/custom-dialog";
+import CustomDialogTrigger from "../global/custom-dialog-trigger";
 import WorkspaceCreator from "../global/workspace-creator";
 
 interface WorkspaceDropdownProps {

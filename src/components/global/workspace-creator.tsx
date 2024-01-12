@@ -3,44 +3,50 @@ import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
 import { User, workspace } from "@/lib/supabase/supabase.types";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Lock, Share } from "lucide-react";
+import { SelectGroup } from "@radix-ui/react-select";
+import { Lock, Plus, Share } from "lucide-react";
 import { Button } from "../ui/button";
 import { v4 } from "uuid";
 import { addCollaborators, createWorkspace } from "@/lib/supabase/queries";
 import CollaboratorSearch from "./collaborator-search";
+import { ScrollArea } from "../ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useToast } from "../ui/use-toast";
 
 const WorkspaceCreator = () => {
   const { user } = useSupabaseUser();
+  const { toast } = useToast();
   const router = useRouter();
   const [permissions, setPermissions] = useState("private");
   const [title, setTitle] = useState("");
   const [collaborators, setCollaborators] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addCollaborator = (user: User) => {
     setCollaborators([...collaborators, user]);
   };
 
   const removeCollaborator = (user: User) => {
-    setCollaborators(collaborators.filter((u) => u.id !== user.id));
+    setCollaborators(collaborators.filter((c) => c.id !== user.id));
   };
 
   const createItem = async () => {
+    setIsLoading(true);
     const uuid = v4();
     if (user?.id) {
       const newWorkspace: workspace = {
         data: null,
         createdAt: new Date().toISOString(),
-        iconId: "😃",
+        iconId: "💼",
         id: uuid,
         inTrash: "",
         title,
@@ -49,24 +55,27 @@ const WorkspaceCreator = () => {
         bannerUrl: "",
       };
       if (permissions === "private") {
+        toast({ title: "Success", description: "Created the workspace" });
         await createWorkspace(newWorkspace);
         router.refresh();
       }
       if (permissions === "shared") {
+        toast({ title: "Success", description: "Created the workspace" });
         await createWorkspace(newWorkspace);
         await addCollaborators(collaborators, uuid);
         router.refresh();
       }
     }
+    setIsLoading(false);
   };
 
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <label htmlFor="name" className="text-muted-foreground">
+        <Label htmlFor="name" className="text-sm text-muted-foreground">
           Name
-        </label>
-        <div className="flex items-center justify-center gap-2">
+        </Label>
+        <div className="flex items-center justify-center gap-2 ">
           <Input
             name="name"
             value={title}
@@ -77,7 +86,7 @@ const WorkspaceCreator = () => {
           />
         </div>
       </div>
-      <div>
+      <>
         <Label htmlFor="permissions" className="text-sm text-muted-foreground">
           Permission
         </Label>
@@ -93,48 +102,111 @@ const WorkspaceCreator = () => {
           <SelectContent>
             <SelectGroup>
               <SelectItem value="private">
-                <div className="flex items-center justify-center gap-4 p-2">
+                <div className="flex items-center justify-center gap-4 p-2 ">
                   <Lock />
                   <article className="flex flex-col text-left">
                     <span>Private</span>
                     <p>
-                      Your workspace will be private and only you will be able
-                      to access it.
+                      Your workspace is private to you. You can choose to share
+                      it later.
                     </p>
                   </article>
                 </div>
               </SelectItem>
               <SelectItem value="shared">
                 <div className="flex items-center justify-center gap-4 p-2">
-                  <Share />
+                  <Share></Share>
                   <article className="flex flex-col text-left">
                     <span>Shared</span>
-                    <p>You can invite collaborators.</p>
+                    <span>You can invite collaborators.</span>
                   </article>
                 </div>
               </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
-      </div>
+      </>
       {permissions === "shared" && (
         <div>
-          <CollaboratorSearch></CollaboratorSearch>
+          <CollaboratorSearch
+            existingCollaborators={collaborators}
+            getCollaborator={(user) => {
+              addCollaborator(user);
+            }}
+          >
+            <Button type="button" className="mt-4 text-sm">
+              <Plus />
+              Add Collaborators
+            </Button>
+          </CollaboratorSearch>
+          <div className="mt-4">
+            <span className="text-sm text-muted-foreground">
+              Collaborators {collaborators.length || ""}
+            </span>
+            <ScrollArea
+              className="
+            h-[120px]
+            overflow-y-scroll
+            w-full
+            rounded-md
+            border
+            border-muted-foreground/20"
+            >
+              {collaborators.length ? (
+                collaborators.map((c) => (
+                  <div
+                    className="flex items-center justify-between p-4 "
+                    key={c.id}
+                  >
+                    <div className="flex items-center gap-4">
+                      <Avatar>
+                        <AvatarImage src="/avatars/7.png" />
+                        <AvatarFallback>PJ</AvatarFallback>
+                      </Avatar>
+                      <div
+                        className="text-sm 
+                          gap-2
+                          text-muted-foreground
+                          overflow-hidden
+                          overflow-ellipsis
+                          sm:w-[300px]
+                          w-[140px]
+                        "
+                      >
+                        {c.email}
+                      </div>
+                    </div>
+                    <Button
+                      variant="secondary"
+                      onClick={() => removeCollaborator(c)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))
+              ) : (
+                <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center ">
+                  <span className="text-sm text-muted-foreground">
+                    You have no collaborators
+                  </span>
+                </div>
+              )}
+            </ScrollArea>
+          </div>
         </div>
       )}
-      <div>
-        <Button
-          type="button"
-          disabled={
-            !title || (permissions === "shared" && collaborators.length === 0)
-          }
-          variant={"secondary"}
-          onClick={createItem}
-          className="w-full"
-        >
-          Create
-        </Button>
-      </div>
+      <Button
+        type="button"
+        disabled={
+          !title ||
+          (permissions === "shared" && collaborators.length === 0) ||
+          isLoading
+        }
+        variant={"secondary"}
+        onClick={createItem}
+      >
+        Create
+      </Button>
     </div>
   );
 };
