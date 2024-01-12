@@ -15,6 +15,13 @@
       "when": 1704787173839,
       "tag": "0001_ancient_rogue",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1705066124379,
+      "tag": "0002_medical_blacklash",
+      "breakpoints": true
     }
   ]
 }
