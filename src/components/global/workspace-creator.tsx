@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Lock, Share } from "lucide-react";
+import { Lock, Plus, Share } from "lucide-react";
 import { Button } from "../ui/button";
 import { v4 } from "uuid";
 import { addCollaborators, createWorkspace } from "@/lib/supabase/queries";
@@ -119,22 +119,19 @@ const WorkspaceCreator = () => {
       </div>
       {permissions === "shared" && (
         <div>
-          <CollaboratorSearch></CollaboratorSearch>
+          <CollaboratorSearch
+            existingCollaborators={collaborators}
+            getCollaborator={(user) => {
+              addCollaborator(user);
+            }}
+          >
+            <Button type="button" className="mt-4 text-sm">
+              <Plus />
+              Add Collaborators
+            </Button>
+          </CollaboratorSearch>
         </div>
       )}
-      <div>
-        <Button
-          type="button"
-          disabled={
-            !title || (permissions === "shared" && collaborators.length === 0)
-          }
-          variant={"secondary"}
-          onClick={createItem}
-          className="w-full"
-        >
-          Create
-        </Button>
-      </div>
     </div>
   );
 };
