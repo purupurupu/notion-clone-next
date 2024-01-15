@@ -11,6 +11,7 @@ import { createFolder } from "@/lib/supabase/queries";
 import { toast, useToast } from "../ui/use-toast";
 import { desc } from "drizzle-orm";
 import { Accordion } from "../ui/accordion";
+import Dropdown from "./Dropdown";
 
 interface FoldersDropdownListProps {
   workspaceFolders: Folder[];
@@ -105,7 +106,13 @@ const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({
         {folders
           .filter((folder) => !folder.inTrash)
           .map((folder) => (
-            <div key={folder.id}>{folder.title}</div>
+            <Dropdown
+              key={folder.id}
+              title={folder.title}
+              listType="folder"
+              id={folder.id}
+              iconId={folder.iconId}
+            />
           ))}
       </Accordion>
     </>
