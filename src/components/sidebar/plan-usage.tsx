@@ -4,6 +4,7 @@ import { useAppState } from "@/lib/providers/state-provider";
 import { Subscription } from "@/lib/supabase/supabase.types";
 import React, { useEffect, useState } from "react";
 import { Progress } from "../ui/progress";
+import CypressDiamondIcon from "../icons/cypressDiamongIcon";
 
 interface PlanUsageProps {
   foldersLength: number;
@@ -28,7 +29,9 @@ const PlanUsage: React.FC<PlanUsageProps> = ({
     <article className="mb-4">
       {subscription?.status !== "active" && (
         <div className="flex items-center gap-2 mb-2 text-muted-foreground">
-          <div className="w-4 h-4"> </div>
+          <div className="w-4 h-4">
+            <CypressDiamondIcon />
+          </div>
 
           <div className="flex items-center justify-between w-full">
             <div>Free Plan</div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { twMerge } from "tailwind-merge";
+import CypressHomeIcon from "../icons/cypressHomeIcon";
 
 interface NativeNavigationProps {
   myWorkspaceId: string;
@@ -16,9 +17,12 @@ const NativeNavigation: React.FC<NativeNavigationProps> = ({
       <ul className="flex flex-col">
         <li>
           <Link
-            className="flex transition-all group/native text-Neutrals/neutrals-7"
+            className="flex gap-2 transition-all group/native text-Neutrals/neutrals-7"
             href={`/dashboard/${myWorkspaceId}`}
-          />
+          >
+            <CypressHomeIcon />
+            <span>My Workspace</span>
+          </Link>
         </li>
       </ul>
     </nav>
