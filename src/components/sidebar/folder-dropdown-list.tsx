@@ -3,6 +3,10 @@ import { useAppState } from "@/lib/providers/state-provider";
 import { workspaces } from "@/lib/supabase/schema";
 import { Folder } from "@/lib/supabase/supabase.types";
 import React, { use, useEffect, useState } from "react";
+import TooltipComponent from "../global/tooltip-component";
+import { PlusIcon } from "lucide-react";
+import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
+import { v4 } from "uuid";
 
 interface FoldersDropdownListProps {
   workspaceFolders: Folder[];
@@ -17,6 +21,7 @@ const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({
   // sete real time updates
   const { state, dispatch } = useAppState();
   const [folders, setFolders] = useState(workspaceFolders);
+  const { subscription } = useSupabaseUser();
 
   useEffect(() => {
     if (workspaceFolders.length > 0) {
@@ -44,10 +49,31 @@ const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({
     );
   }, [state]);
 
+  const addFolderHandler = async () => {
+    // if (folders.length >= 3 && !subscription) {};
+    const newFolder: Folder = {
+      data: null,
+      id: v4(),
+      createdAt: new Date().toISOString(),
+      title: "Untitled",
+      iconId: "👜",
+      inTrash: null,
+      workspaceId,
+      bannerUrl: "",
+    };
+  };
+
   return (
     <>
       <div className="sticky top-0 z-20 flex items-center justify-between w-full h-10 pr-4 bg-background group/title text-Neutrals/neutrals-8">
         <span className="text-xs font-bold text-Neutrals-8">FOLDERS</span>
+        <TooltipComponent message="Create Folder">
+          <PlusIcon
+            onClick={addFolderHandler}
+            size={16}
+            className="hidden cursor-pointer group-hover/title:inline-block hover:dark:text-white"
+          />
+        </TooltipComponent>
       </div>
     </>
   );
