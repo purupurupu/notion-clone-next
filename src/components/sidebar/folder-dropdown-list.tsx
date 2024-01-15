@@ -10,6 +10,7 @@ import { v4 } from "uuid";
 import { createFolder } from "@/lib/supabase/queries";
 import { toast, useToast } from "../ui/use-toast";
 import { desc } from "drizzle-orm";
+import { Accordion } from "../ui/accordion";
 
 interface FoldersDropdownListProps {
   workspaceFolders: Folder[];
@@ -22,7 +23,7 @@ const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({
 }) => {
   // local state folders
   // sete real time updates
-  const { state, dispatch } = useAppState();
+  const { state, dispatch, folderId } = useAppState();
   const { toast } = useToast();
   const [folders, setFolders] = useState(workspaceFolders);
   const { subscription } = useSupabaseUser();
@@ -96,6 +97,17 @@ const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({
           />
         </TooltipComponent>
       </div>
+      <Accordion
+        className="pb-20"
+        type="multiple"
+        defaultValue={[folderId || ""]}
+      >
+        {folders
+          .filter((folder) => !folder.inTrash)
+          .map((folder) => (
+            <div key={folder.id}>{folder.title}</div>
+          ))}
+      </Accordion>
     </>
   );
 };
