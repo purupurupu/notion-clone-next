@@ -22,6 +22,20 @@
       "when": 1705066124379,
       "tag": "0002_medical_blacklash",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1705327003428,
+      "tag": "0003_robust_lyja",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1705328381419,
+      "tag": "0004_long_zemo",
+      "breakpoints": true
     }
   ]
 }

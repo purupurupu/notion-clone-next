@@ -13,6 +13,8 @@ import { twMerge } from "tailwind-merge";
 import WorkspaceDropdown from "./workspace-dropdown";
 import PlanUsage from "./plan-usage";
 import NativeNavigation from "./native-navigation";
+import { ScrollArea } from "../ui/scroll-area";
+import FoldersDropdownList from "./folder-dropdown-list";
 
 interface SidebarProps {
   params: { workspaceId: string };
@@ -70,6 +72,13 @@ const Sidebar: React.FC<SidebarProps> = async ({ params, className }) => {
           subscription={subscriptionData}
         />
         <NativeNavigation myWorkspaceId={params.workspaceId} />
+        <ScrollArea className="relative overflow-scroll h-[450px]">
+          <div className="absolute bottom-0 z-40 w-full h-20 pointer-events-none bg-gradient-to-t from backgroud to-transparent" />
+          <FoldersDropdownList
+            workspaceFolders={workspaceFolderData || []}
+            workspaceId={params.workspaceId}
+          />
+        </ScrollArea>
       </div>
     </aside>
   );
