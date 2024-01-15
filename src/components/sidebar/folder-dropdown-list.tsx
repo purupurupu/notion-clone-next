@@ -7,6 +7,9 @@ import TooltipComponent from "../global/tooltip-component";
 import { PlusIcon } from "lucide-react";
 import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
 import { v4 } from "uuid";
+import { createFolder } from "@/lib/supabase/queries";
+import { toast, useToast } from "../ui/use-toast";
+import { desc } from "drizzle-orm";
 
 interface FoldersDropdownListProps {
   workspaceFolders: Folder[];
@@ -20,6 +23,7 @@ const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({
   // local state folders
   // sete real time updates
   const { state, dispatch } = useAppState();
+  const { toast } = useToast();
   const [folders, setFolders] = useState(workspaceFolders);
   const { subscription } = useSupabaseUser();
 
@@ -61,6 +65,23 @@ const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({
       workspaceId,
       bannerUrl: "",
     };
+    dispatch({
+      type: "ADD_FOLDER",
+      payload: { workspaceId, folder: { ...newFolder, files: [] } },
+    });
+    const { data, error } = await createFolder(newFolder);
+    if (error) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Could'nt create folder",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Folder created",
+      });
+    }
   };
 
   return (
